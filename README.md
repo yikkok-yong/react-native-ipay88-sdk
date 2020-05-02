@@ -1,14 +1,22 @@
-# React Native ipay88-sdk
+# React Native rn-ipay88
 
 ## Getting started
 
-`$ npm install ipay88-sdk --save`
+`$ npm install rn-ipay88 --save`
 
 ### Mostly automatic installation
 
-`$ react-native link ipay88-sdk`
+`$ react-native link rn-ipay88`
 
 ### Manual installation
+
+### React Native >=0.60
+
+#### iOS
+
+If you are using RN >= 0.60, only run `pod install` from the ios directory. Then rebuild your project.
+
+### React Native <=0.60
 
 #### iOS
 
@@ -21,8 +29,8 @@
 
 1.  Open up `android/app/src/main/java/[...]/MainActivity.java`
 
-* Add `import com.ipay88.IPay88Package;` to the imports at the top of the file
-* Add `new IPay88Package()` to the list returned by the `getPackages()` method
+- Add `import com.ipay88.IPay88Package;` to the imports at the top of the file
+- Add `new IPay88Package()` to the list returned by the `getPackages()` method
 
 2.  Append the following lines to `android/settings.gradle`:
     ```
@@ -37,55 +45,38 @@
 ## Usage
 
 ```javascript
-import React, { Component } from "react";
-import {
-  Platform,
-  StyleSheet,
-  Button,
-  Text,
-  View,
-  Alert,
-  ToastAndroid
-} from "react-native";
-import IPay88, { Pay } from "ipay88-sdk";
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Button, Text, View, Alert, ToastAndroid } from 'react-native';
+import IPay88, { Pay } from 'ipay88-sdk';
 
 export default class App extends Component {
-  successNotify = data => {
-    if (Platform.OS === "ios") {
-      const {
-        transactionId,
-        referenceNo,
-        amount,
-        remark,
-        authorizationCode
-      } = data;
+  successNotify = (data) => {
+    if (Platform.OS === 'ios') {
+      const { transactionId, referenceNo, amount, remark, authorizationCode } = data;
 
-      Alert.alert("Message", `Payment authcode is ${authorizationCode}`, {
-        cancelable: true
+      Alert.alert('Message', `Payment authcode is ${authorizationCode}`, {
+        cancelable: true,
       });
     } else {
-      ToastAndroid.show(
-        `Message: Payment authcode is ${authorizationCode}`,
-        ToastAndroid.LONG
-      );
+      ToastAndroid.show(`Message: Payment authcode is ${authorizationCode}`, ToastAndroid.LONG);
     }
   };
 
-  cancelNotify = data => {
+  cancelNotify = (data) => {
     const { transactionId, referenceNo, amount, remark, error } = data;
 
-    if (Platform.OS === "ios") {
-      Alert.alert("Message", `${error}`, { cancelable: true });
+    if (Platform.OS === 'ios') {
+      Alert.alert('Message', `${error}`, { cancelable: true });
     } else {
       ToastAndroid.show(`Message: ${error}`, ToastAndroid.LONG);
     }
   };
 
-  failedNotify = data => {
+  failedNotify = (data) => {
     const { transactionId, referenceNo, amount, remark, error } = data;
 
-    if (Platform.OS === "ios") {
-      Alert.alert("Message", `${error}`, { cancelable: true });
+    if (Platform.OS === 'ios') {
+      Alert.alert('Message', `${error}`, { cancelable: true });
     } else {
       ToastAndroid.show(`Message: ${error}`, ToastAndroid.LONG);
     }
@@ -94,20 +85,20 @@ export default class App extends Component {
   pay = () => {
     try {
       const data = {};
-      data.paymentId = "2"; // refer to ipay88 docs
-      data.merchantKey = "{{ merchantKey }}";
-      data.merchantCode = "{{ merchantCode }}";
-      data.referenceNo = "1234565";
-      data.amount = "1.00";
-      data.currency = "MYR";
-      data.productDescription = "Payment";
-      data.userName = "test";
-      data.userEmail = "test@gmail.com";
-      data.userContact = "0123456789";
-      data.remark = "me";
-      data.utfLang = "UTF-8";
-      data.country = "MY";
-      data.backendUrl = "http://sample.com";
+      data.paymentId = '2'; // refer to ipay88 docs
+      data.merchantKey = '{{ merchantKey }}';
+      data.merchantCode = '{{ merchantCode }}';
+      data.referenceNo = '1234565';
+      data.amount = '1.00';
+      data.currency = 'MYR';
+      data.productDescription = 'Payment';
+      data.userName = 'test';
+      data.userEmail = 'test@gmail.com';
+      data.userContact = '0123456789';
+      data.remark = 'me';
+      data.utfLang = 'UTF-8';
+      data.country = 'MY';
+      data.backendUrl = 'http://sample.com';
       const errs = Pay(data);
       if (Object.keys(errs).length > 0) {
         console.log(errs);
@@ -122,16 +113,12 @@ export default class App extends Component {
       <View
         style={{
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center"
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <IPay88
-          successNotify={this.successNotify}
-          failedNotify={this.failedNotify}
-          cancelNotify={this.cancelNotify}
-        />
-        <Button title="Pay" onPress={this.pay} />
+        <IPay88 successNotify={this.successNotify} failedNotify={this.failedNotify} cancelNotify={this.cancelNotify} />
+        <Button title='Pay' onPress={this.pay} />
       </View>
     );
   }
@@ -142,41 +129,41 @@ export default class App extends Component {
 
 // Refer to ipay88 docs for more info
 
-* paymentId // optional
-* merchantKey // required
-* merchantCode // required
-* referenceNo // required
-* amount // required
-* currency // required
-* productDescription // required
-* userName // required
-* userEmail // required
-* userContact // required
-* remark // optional
-* utfLang // optional
-* country // required
-* backendUrl // required
+- paymentId // optional
+- merchantKey // required
+- merchantCode // required
+- referenceNo // required
+- amount // required
+- currency // required
+- productDescription // required
+- userName // required
+- userEmail // required
+- userContact // required
+- remark // optional
+- utfLang // optional
+- country // required
+- backendUrl // required
 
 ### Success Notify
 
-* transactionId
-* referenceNo
-* amount
-* remark
-* authorizationCode
+- transactionId
+- referenceNo
+- amount
+- remark
+- authorizationCode
 
 ### Failed Notify
 
-* transactionId
-* referenceNo
-* amount
-* remark
-* error
+- transactionId
+- referenceNo
+- amount
+- remark
+- error
 
 ### Cancel Notify
 
-* transactionId
-* referenceNo
-* amount
-* remark
-* error
+- transactionId
+- referenceNo
+- amount
+- remark
+- error
